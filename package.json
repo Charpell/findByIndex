@@ -1,0 +1,15 @@
+{
+  "name": "findbyindex",
+  "version": "1.0.0",
+  "description": "An E-commerce website for foods",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "ecommerce",
+    "food"
+  ],
+  "author": "Ebuka Umeh",
+  "license": "ISC"
+}
