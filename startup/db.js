@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
-const config = require("config");
+
+const keys = require("../config/keys");
 
 module.exports = function() {
-  const db = config.get("db");
   mongoose
-    .connect(db)
-    .then(() => console.log(`Connected to ${db}....`))
+    .connect(keys.mongoURI)
+    .then(() => console.log("MongoDb is now connected...."))
     .catch(error => console.log("MongoDb not connected", error.message));
 };

@@ -2,7 +2,11 @@ const mongoose = require("mongoose");
 const _ = require("lodash");
 const bcrypt = require("bcrypt");
 
-const { User, validateUser } = require("../models/userModel");
+const {
+  User,
+  validateUser,
+  validateloginUser
+} = require("../models/userModel");
 
 const createUser = async (req, res) => {
   const { error } = validateUser(req.body);
@@ -20,6 +24,19 @@ const createUser = async (req, res) => {
   res.header("x-auth-token", token).send(_.pick(user, ["id", "name", "email"]));
 };
 
+const login = async (req, res) => {
+  const { error } = validateloginUser(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
+  const body = _.pick(req.body, ["email", "password"]);
+  const user = await User.findByCredentials(body.email, body.password);
+
+  const token = await user.generateAuthToken();
+  res.header("x-auth-token", token).send(_.pick(user, ["id", "name", "email"]));
+};
+
 module.exports = {
-  createUser
+  createUser,
+  me,
+  login
 };
