@@ -1,5 +1,0 @@
-{
-  "jwtPrivateKey": "1234",
-  "db": "mongodb://localhost/findbyindex_tests",
-  "port": "4000"
-}
