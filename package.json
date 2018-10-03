@@ -8,7 +8,8 @@
   },
   "scripts": {
     "start": "node index.js",
-    "test": "jest --watchAll --verbose",
+    "test": "jest",
+    "test:watch": "jest  --watchAll --verbose",
     "coverage": "jest --coverage",
     "precommit": "pretty-quick --staged"
   },
