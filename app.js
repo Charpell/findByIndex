@@ -2,8 +2,8 @@ const express = require("express");
 
 const app = express();
 
-app.use("/", (req, res) => {
-  res.send("Hello World");
-}); //gh
+require("./startup/routes")(app);
+require("./startup/db")();
+require("./startup/config")();
 
 module.exports = app;
