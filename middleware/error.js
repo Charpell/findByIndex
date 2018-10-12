@@ -8,6 +8,13 @@ const validationError = (error, req, res, next) => {
   next();
 };
 
+// const validationError = (error, req, res, next) => {
+//   console.log("Error", error.errors.category.message)
+//   // res.status(error.status).send("error");
+//   res.send(error.errors.category.message)
+//   next();
+// };
+
 module.exports = {
   serverError,
   validationError
