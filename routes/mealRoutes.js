@@ -8,16 +8,21 @@ const {
   getMeals,
   getMeal,
   updateMeal,
-  deleteMeal,
-  getOwnerMeals
+  deleteMeal
 } = require("../controllers/mealController");
 
-router.get("/", [authenticate, vendorAuthentication], catchErrors(getMeals));
+router.get("/", catchErrors(getMeals));
 router.get("/:id", catchErrors(getMeal));
-router.post("/", authenticate, catchErrors(createMeal));
-router.patch("/:id", authenticate, catchErrors(updateMeal));
-router.delete("/:id", authenticate, catchErrors(deleteMeal));
-
-router.get("/owner", catchErrors(getOwnerMeals));
+router.post("/", [authenticate, vendorAuthentication], catchErrors(createMeal));
+router.patch(
+  "/:id",
+  [authenticate, vendorAuthentication],
+  catchErrors(updateMeal)
+);
+router.delete(
+  "/:id",
+  [authenticate, vendorAuthentication],
+  catchErrors(deleteMeal)
+);
 
 module.exports = router;

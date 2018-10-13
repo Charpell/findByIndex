@@ -1,7 +1,5 @@
 const mongoose = require("mongoose");
 const _ = require("lodash");
-const Joi = require("joi");
-Joi.objectId = require("joi-objectid")(Joi);
 
 const { Meal, validateMeal } = require("../models/mealModel");
 
@@ -79,17 +77,10 @@ const deleteMeal = async (req, res) => {
   res.status(403).json({ error: "You don't have permission to do that!" });
 };
 
-const getOwnerMeals = async (req, res) => {
-  const meal = await Meal.find({ owner: "5bbee78abd64d610d033dcfa" });
-
-  res.send(meal);
-};
-
 module.exports = {
   createMeal,
   getMeals,
   getMeal,
   updateMeal,
-  deleteMeal,
-  getOwnerMeals
+  deleteMeal
 };
