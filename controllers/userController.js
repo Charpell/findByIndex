@@ -35,7 +35,23 @@ const loginUser = async (req, res) => {
   res.header("x-auth-token", token).send(_.pick(user, ["id", "name", "email"]));
 };
 
+const activateVendorMode = async (req, res) => {
+  let user = await User.findOneAndUpdate(
+    { _id: req.user._id },
+    {
+      $set: {
+        role: "vendor"
+      }
+    },
+    { new: true }
+  );
+  if (!user) return res.status(404).send({ response: "User does not exist" });
+
+  res.status(200).send({ response: "Vendor Mode Activated" });
+};
+
 module.exports = {
   createUser,
-  loginUser
+  loginUser,
+  activateVendorMode
 };

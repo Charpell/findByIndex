@@ -47,19 +47,20 @@ const updateMeal = async (req, res) => {
   let meal = await Meal.findById(req.params.id);
   if (!meal) return res.status(404).json({ response: "Not found" });
 
-  if (meal.vendor.toString() === req.user._id || req.user.role === "admin") {
-    await meal
-      .set({
-        name,
-        category,
-        tags
-      })
-      .save();
-
-    return res.status(200).json(meal);
+  if (meal.vendor.toString() !== req.user._id) {
+    return res
+      .status(403)
+      .json({ error: "You don't have permission to do that!" });
   }
+  await meal
+    .set({
+      name,
+      category,
+      tags
+    })
+    .save();
 
-  res.status(403).json({ error: "You don't have permission to do that!" });
+  res.status(200).json(meal);
 };
 
 const deleteMeal = async (req, res) => {
@@ -69,12 +70,14 @@ const deleteMeal = async (req, res) => {
   let meal = await Meal.findById(req.params.id);
   if (!meal) return res.status(404).json({ response: "Not found" });
 
-  if (meal.vendor.toString() === req.user._id || req.user.role === "admin") {
-    await meal.remove();
-    return res.status(200).json(meal);
+  if (meal.vendor.toString() !== req.user._id) {
+    return res
+      .status(403)
+      .json({ error: "You don't have permission to do that!" });
   }
 
-  res.status(403).json({ error: "You don't have permission to do that!" });
+  await meal.remove();
+  return res.status(200).json(meal);
 };
 
 module.exports = {

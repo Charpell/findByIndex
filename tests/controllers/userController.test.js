@@ -126,3 +126,25 @@ describe("Login", () => {
     expect(res.header["x-auth-token"]).toBeTruthy();
   });
 });
+
+describe("Activate Vendor Mode", () => {
+  let user;
+  beforeEach(async () => {
+    user = await request(app)
+      .post("/api/users")
+      .send({
+        name: "felix",
+        email: "fgfh@gsjhd.com",
+        password: "123456"
+      });
+  });
+
+  it("should change the user's role to vendor", async () => {
+    const res = await request(app)
+      .patch("/api/users/vendor")
+      .set("x-auth-token", user.headers["x-auth-token"]);
+
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual({ response: "Vendor Mode Activated" });
+  });
+});
