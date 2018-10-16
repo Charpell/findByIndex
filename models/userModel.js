@@ -19,6 +19,9 @@ const userSchema = new mongoose.Schema({
     maxlength: 255,
     unique: true
   },
+  avatar: {
+    type: String
+  },
   password: {
     type: String,
     required: true,
@@ -34,7 +37,7 @@ const userSchema = new mongoose.Schema({
 
 userSchema.methods.generateAuthToken = function() {
   const token = jwt.sign(
-    { _id: this._id, role: this.role },
+    { _id: this._id, name: this.name, avatar: this.avatar, role: this.role },
     keys.jwtPrivateKey
   );
   return token;

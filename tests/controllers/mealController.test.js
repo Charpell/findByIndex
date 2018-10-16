@@ -124,7 +124,7 @@ describe("Create a Meal", () => {
     expect(res.text).toBe('"tags" must contain at least 1 items');
   });
 
-  it("should return 200 if a meal is successfully created", async () => {
+  it("should return 201 if a meal is successfully created", async () => {
     const res = await request(app)
       .post("/api/meals")
       .set("x-auth-token", users[1].token)

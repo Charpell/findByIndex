@@ -77,7 +77,7 @@ const deleteMeal = async (req, res) => {
   }
 
   await meal.remove();
-  return res.status(200).json(meal);
+  res.status(200).json(meal);
 };
 
 module.exports = {
