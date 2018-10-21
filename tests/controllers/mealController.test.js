@@ -145,3 +145,24 @@ describe("Create a Meal", () => {
     );
   });
 });
+
+describe("Get meals", () => {
+  it("should return status code of 404 if no meal found", async () => {
+    const res = await request(app).get("/api/meals/5bc259266d2022c8e1fd4e39");
+
+    expect(res.status).toBe(404);
+  });
+
+  it("should get one meal", async () => {
+    const res = await request(app).get(`/api/meals/${mealOneId}`);
+
+    expect(res.status).toBe(200);
+  });
+
+  it("should get all the meals", async () => {
+    const res = await request(app).get("/api/meals");
+
+    expect(res.status).toBe(200);
+    expect(res.body).toHaveLength(2);
+  });
+});
