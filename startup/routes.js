@@ -4,6 +4,7 @@ const meals = require("../routes/mealRoutes");
 const vendors = require("../routes/vendorRoutes");
 const admin = require("../routes/adminRoutes");
 const posts = require("../routes/postRoutes");
+const search = require("../routes/searchRoutes");
 const { serverError, validationError } = require("../middleware/error");
 
 module.exports = function(app) {
@@ -13,6 +14,7 @@ module.exports = function(app) {
   app.use("/api/vendors", vendors);
   app.use("/api/admin", admin);
   app.use("/api/posts", posts);
+  app.use("/api/search", search);
   app.use(validationError);
   app.use(serverError);
 };

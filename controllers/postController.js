@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
 const { Post, validateTextInput } = require("../models/postModel");
+const { posts } = require("../tests/seed/populate");
 
 const createPost = async (req, res) => {
   const { error } = validateTextInput(req.body);
@@ -14,6 +15,7 @@ const createPost = async (req, res) => {
   });
 
   const result = await newPost.save();
+  // let result = await Post.insertMany(posts)
   res.status(201).json(result);
 };
 

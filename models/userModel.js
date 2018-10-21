@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 
 const keys = require("../config/keys");
+const { GeoSchema } = require("./schemas");
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -28,6 +29,7 @@ const userSchema = new mongoose.Schema({
     minlength: 5,
     maxlength: 1024
   },
+  geometry: GeoSchema,
   role: {
     type: String,
     default: "user",
@@ -37,7 +39,13 @@ const userSchema = new mongoose.Schema({
 
 userSchema.methods.generateAuthToken = function() {
   const token = jwt.sign(
-    { _id: this._id, name: this.name, avatar: this.avatar, role: this.role },
+    {
+      _id: this._id,
+      name: this.name,
+      avatar: this.avatar,
+      geometry: this.geometry,
+      role: this.role
+    },
     keys.jwtPrivateKey
   );
   return token;
@@ -84,7 +92,9 @@ function validateUser(user) {
       .min(5)
       .max(255)
       .required(),
-    role: Joi.string().valid(["user", "vendor", "admin", "root"])
+    role: Joi.string().valid(["user", "vendor", "admin", "root"]),
+    longitude: Joi.string(),
+    latitude: Joi.string()
   };
 
   return Joi.validate(user, schema);
