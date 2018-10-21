@@ -63,9 +63,27 @@ const updateMeal = async (req, res) => {
   res.status(200).json(meal);
 };
 
+const deleteMeal = async (req, res) => {
+  const isValid = mongoose.Types.ObjectId.isValid(req.params.id);
+  if (!isValid) return res.status(400).json({ error: "Invalid ID" });
+
+  let meal = await Meal.findById(req.params.id);
+  if (!meal) return res.status(404).json({ response: "Not found" });
+
+  if (meal.vendor.toString() !== req.user._id) {
+    return res
+      .status(403)
+      .json({ error: "You don't have permission to do that!" });
+  }
+
+  await meal.remove();
+  res.status(200).json(meal);
+};
+
 module.exports = {
   createMeal,
   getMeals,
   getMeal,
-  updateMeal
+  updateMeal,
+  deleteMeal
 };
