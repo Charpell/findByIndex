@@ -35,8 +35,37 @@ const getMeal = async (req, res) => {
   res.status(200).json(meal);
 };
 
+const updateMeal = async (req, res) => {
+  const { error } = validateMeal(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
+  const isValid = mongoose.Types.ObjectId.isValid(req.params.id);
+  if (!isValid) return res.status(400).json({ error: "Invalid ID" });
+
+  const { name, category, tags } = req.body;
+
+  let meal = await Meal.findById(req.params.id);
+  if (!meal) return res.status(404).json({ response: "Not found" });
+
+  if (meal.vendor.toString() !== req.user._id) {
+    return res
+      .status(403)
+      .json({ error: "You don't have permission to do that!" });
+  }
+  await meal
+    .set({
+      name,
+      category,
+      tags
+    })
+    .save();
+
+  res.status(200).json(meal);
+};
+
 module.exports = {
   createMeal,
   getMeals,
-  getMeal
+  getMeal,
+  updateMeal
 };
