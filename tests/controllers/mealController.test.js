@@ -166,3 +166,139 @@ describe("Get meals", () => {
     expect(res.body).toHaveLength(2);
   });
 });
+
+describe("Update a Meal", () => {
+  it("should return 401 if user is not authenticated", async () => {
+    const res = await request(app)
+      .patch(`/api/meals/${mealOneId}`)
+      .send({
+        name: "Fried Rice",
+        category: "Rice",
+        tags: ["salad", "eggs"]
+      });
+
+    expect(res.status).toBe(401);
+    expect(res.text).toBe("Access denied. No token provided");
+  });
+
+  it("should return 403 if user is authenticated but not a vendor", async () => {
+    const res = await request(app)
+      .patch(`/api/meals/${mealOneId}`)
+      .set("x-auth-token", users[0].token)
+      .send({
+        name: "Fried Rice",
+        category: "Rice",
+        tags: ["salad", "eggs"]
+      });
+
+    expect(res.status).toBe(403);
+    expect(res.body).toEqual({ error: "You don't have permission" });
+  });
+
+  it("should return 400 for missing name field", async () => {
+    const res = await request(app)
+      .patch(`/api/meals/${mealOneId}`)
+      .set("x-auth-token", users[1].token)
+      .send({
+        category: "Rice",
+        tags: ["salad", "eggs"]
+      });
+
+    expect(res.status).toBe(400);
+    expect(res.text).toBe('"name" is required');
+  });
+
+  it("should return 400 for empty name field", async () => {
+    const res = await request(app)
+      .patch(`/api/meals/${mealOneId}`)
+      .set("x-auth-token", users[1].token)
+      .send({
+        name: "",
+        category: "Rice",
+        tags: ["salad", "eggs"]
+      });
+
+    expect(res.status).toBe(400);
+    expect(res.text).toBe('"name" is not allowed to be empty');
+  });
+
+  it("should return 400 for missing category field", async () => {
+    const res = await request(app)
+      .patch(`/api/meals/${mealOneId}`)
+      .set("x-auth-token", users[1].token)
+      .send({
+        name: "Beans",
+        tags: ["salad", "eggs"]
+      });
+
+    expect(res.status).toBe(400);
+    expect(res.text).toBe('"category" is required');
+  });
+
+  it("should return 400 for empty category field", async () => {
+    const res = await request(app)
+      .patch(`/api/meals/${mealOneId}`)
+      .set("x-auth-token", users[1].token)
+      .send({
+        name: "Chiken",
+        category: "",
+        tags: ["salad", "eggs"]
+      });
+
+    expect(res.status).toBe(400);
+    expect(res.text).toBe('"category" is not allowed to be empty');
+  });
+
+  it("should return 400 for missing tag field", async () => {
+    const res = await request(app)
+      .patch(`/api/meals/${mealOneId}`)
+      .set("x-auth-token", users[1].token)
+      .send({
+        name: "Beans",
+        category: "Rice"
+      });
+
+    expect(res.status).toBe(400);
+    expect(res.text).toBe('"tags" is required');
+  });
+
+  it("should return 400 for empty tag field", async () => {
+    const res = await request(app)
+      .patch(`/api/meals/${mealOneId}`)
+      .set("x-auth-token", users[1].token)
+      .send({
+        name: "Fried Rice",
+        category: "Rice",
+        tags: []
+      });
+
+    expect(res.status).toBe(400);
+    expect(res.text).toBe('"tags" must contain at least 1 items');
+  });
+
+  it("should return 403 if the vendor is not the creator of the meal", async () => {
+    const res = await request(app)
+      .patch(`/api/meals/${mealOneId}`)
+      .set("x-auth-token", users[2].token)
+      .send({
+        name: "Jollof Rice",
+        category: "sause",
+        tags: ["salad", "corn", "egg"]
+      });
+
+    expect(res.status).toBe(403);
+  });
+
+  it("should return 200 if the meal was successfully updated", async () => {
+    const res = await request(app)
+      .patch(`/api/meals/${mealOneId}`)
+      .set("x-auth-token", users[1].token)
+      .send({
+        name: "Jollof Rice",
+        category: "sause",
+        tags: ["salad", "corn", "egg"]
+      });
+
+    expect(res.status).toBe(200);
+  });
+});
