@@ -8,7 +8,8 @@ const {
   createMeal,
   getMeals,
   getMeal,
-  updateMeal
+  updateMeal,
+  deleteMeal
 } = require("../controllers/mealController");
 
 router.post("/", [authenticate, vendorAuthentication], catchErrors(createMeal));
@@ -19,6 +20,12 @@ router.patch(
   "/:id",
   [authenticate, vendorAuthentication],
   catchErrors(updateMeal)
+);
+
+router.delete(
+  "/:id",
+  [authenticate, vendorAuthentication],
+  catchErrors(deleteMeal)
 );
 
 module.exports = router;

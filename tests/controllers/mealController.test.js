@@ -302,3 +302,37 @@ describe("Update a Meal", () => {
     expect(res.status).toBe(200);
   });
 });
+
+describe("Delete Meal", () => {
+  it("should return 400 if the meal id is not valid", async () => {
+    const res = await request(app)
+      .delete(`/api/meals/123456`)
+      .set("x-auth-token", users[1].token);
+
+    expect(res.status).toBe(400);
+  });
+
+  it("should return 404 if the meal is not found", async () => {
+    const res = await request(app)
+      .delete(`/api/meals/${mealThreeId}`)
+      .set("x-auth-token", users[1].token);
+
+    expect(res.status).toBe(404);
+  });
+
+  it("should return 403 if the vendor is not the creator of the meal", async () => {
+    const res = await request(app)
+      .delete(`/api/meals/${mealOneId}`)
+      .set("x-auth-token", users[2].token);
+
+    expect(res.status).toBe(403);
+  });
+
+  it("should return 200 if the the meal was successfully deleted", async () => {
+    const res = await request(app)
+      .delete(`/api/meals/${mealOneId}`)
+      .set("x-auth-token", users[1].token);
+
+    expect(res.status).toBe(200);
+  });
+});
