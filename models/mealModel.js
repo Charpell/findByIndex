@@ -1,6 +1,8 @@
 const Joi = require("joi");
 const mongoose = require("mongoose");
 
+const { GeoSchema } = require("./schemas");
+
 const mealSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -16,7 +18,8 @@ const mealSchema = new mongoose.Schema({
     required: true
   },
   cost: {
-    type: Number
+    type: Number,
+    required: true
   },
   tags: [String],
   date: {
@@ -41,7 +44,8 @@ const mealSchema = new mongoose.Schema({
       },
       type: Number
     }
-  ]
+  ],
+  geometry: GeoSchema
 });
 
 const Meal = mongoose.model("Meal", mealSchema);
@@ -55,7 +59,8 @@ function validateMeal(meal) {
     category: Joi.string().required(),
     tags: Joi.array()
       .min(1)
-      .required()
+      .required(),
+    cost: Joi.number().required()
   };
 
   return Joi.validate(meal, schema);
