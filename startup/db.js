@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
 const keys = require("../config/keys");
+mongoose.Promise = global.Promise;
 
 module.exports = function() {
   mongoose

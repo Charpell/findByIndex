@@ -15,7 +15,15 @@ const createUser = async (req, res) => {
   let user = await User.findOne({ email: req.body.email });
   if (user) return res.status(409).send("User already registered.");
 
-  user = new User(_.pick(req.body, ["name", "email", "password"]));
+  const { name, email, password, longitude = 3, latitude = 6 } = req.body;
+
+  user = new User({
+    name,
+    email,
+    password,
+    geometry: { type: "Point", coordinates: [longitude, latitude] }
+  });
+
   const salt = await bcrypt.genSalt(10);
   user.password = await bcrypt.hash(user.password, salt);
   await user.save();
