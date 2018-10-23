@@ -24,7 +24,15 @@ const users = [
     email: "johnkare@gmail.com",
     password: "123456",
     role: "vendor",
-    token: jwt.sign({ _id: userTwoId, role: "vendor" }, keys.jwtPrivateKey)
+    geometry: {
+      coordinates: [3, 6],
+      _id: "5bce1c9dbcffa969eafe0acf",
+      type: "Point"
+    },
+    token: jwt.sign(
+      { _id: userTwoId, geometry: this.geometry, role: "vendor" },
+      keys.jwtPrivateKey
+    )
   },
   {
     _id: userThreeId,
@@ -42,14 +50,16 @@ const meals = [
     name: "Fried Rice",
     category: "Rice",
     tags: ["salad", "sausage", "egg"],
-    vendor: userTwoId
+    vendor: userTwoId,
+    cost: 10
   },
   {
     _id: mealTwoId,
     name: "Beans",
     category: "beans",
     tags: ["moi-moi", "oats", "egg"],
-    vendor: userThreeId
+    vendor: userThreeId,
+    cost: 24
   }
 ];
 
