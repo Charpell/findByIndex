@@ -22,6 +22,7 @@ describe("Create a Meal", () => {
       .send({
         name: "Fried Rice",
         category: "Rice",
+        cost: 114,
         tags: ["salad", "eggs"]
       });
 
@@ -36,6 +37,7 @@ describe("Create a Meal", () => {
       .send({
         name: "Fried Rice",
         category: "Rice",
+        cost: 114,
         tags: ["salad", "eggs"]
       });
 
@@ -49,6 +51,7 @@ describe("Create a Meal", () => {
       .set("x-auth-token", users[1].token)
       .send({
         category: "Rice",
+        cost: 114,
         tags: ["salad", "eggs"]
       });
 
@@ -63,6 +66,7 @@ describe("Create a Meal", () => {
       .send({
         name: "",
         category: "Rice",
+        cost: 114,
         tags: ["salad", "eggs"]
       });
 
@@ -76,6 +80,7 @@ describe("Create a Meal", () => {
       .set("x-auth-token", users[1].token)
       .send({
         name: "Beans",
+        cost: 114,
         tags: ["salad", "eggs"]
       });
 
@@ -90,6 +95,7 @@ describe("Create a Meal", () => {
       .send({
         name: "Chiken",
         category: "",
+        cost: 114,
         tags: ["salad", "eggs"]
       });
 
@@ -103,6 +109,7 @@ describe("Create a Meal", () => {
       .set("x-auth-token", users[1].token)
       .send({
         name: "Beans",
+        cost: 114,
         category: "Rice"
       });
 
@@ -116,6 +123,7 @@ describe("Create a Meal", () => {
       .set("x-auth-token", users[1].token)
       .send({
         name: "Fried Rice",
+        cost: 114,
         category: "Rice",
         tags: []
       });
@@ -124,25 +132,33 @@ describe("Create a Meal", () => {
     expect(res.text).toBe('"tags" must contain at least 1 items');
   });
 
-  it("should return 200 if a meal is successfully created", async () => {
+  it("should return 400 for missing cost field", async () => {
+    const res = await request(app)
+      .post("/api/meals")
+      .set("x-auth-token", users[1].token)
+      .send({
+        name: "Beans",
+        category: "Rice",
+        tags: ["salad", "eggs"]
+      });
+
+    expect(res.status).toBe(400);
+    expect(res.text).toBe('"cost" is required');
+  });
+
+  it("should return 400 for empty cost field", async () => {
     const res = await request(app)
       .post("/api/meals")
       .set("x-auth-token", users[1].token)
       .send({
         name: "Fried Rice",
+        cost: "",
         category: "Rice",
-        tags: ["salad", "sausage", "egg"]
+        tags: ["salad", "eggs"]
       });
 
-    expect(res.status).toBe(201);
-    expect(res.body).toHaveProperty(
-      "_id",
-      "category",
-      "name",
-      "ratings",
-      "tags",
-      "vendor"
-    );
+    expect(res.status).toBe(400);
+    expect(res.text).toBe('"cost" must be a number');
   });
 });
 
@@ -174,6 +190,7 @@ describe("Update a Meal", () => {
       .send({
         name: "Fried Rice",
         category: "Rice",
+        cost: 34,
         tags: ["salad", "eggs"]
       });
 
@@ -188,6 +205,7 @@ describe("Update a Meal", () => {
       .send({
         name: "Fried Rice",
         category: "Rice",
+        cost: 34,
         tags: ["salad", "eggs"]
       });
 
@@ -201,6 +219,7 @@ describe("Update a Meal", () => {
       .set("x-auth-token", users[1].token)
       .send({
         category: "Rice",
+        cost: 34,
         tags: ["salad", "eggs"]
       });
 
@@ -215,6 +234,7 @@ describe("Update a Meal", () => {
       .send({
         name: "",
         category: "Rice",
+        cost: 34,
         tags: ["salad", "eggs"]
       });
 
@@ -228,6 +248,7 @@ describe("Update a Meal", () => {
       .set("x-auth-token", users[1].token)
       .send({
         name: "Beans",
+        cost: 34,
         tags: ["salad", "eggs"]
       });
 
@@ -242,6 +263,7 @@ describe("Update a Meal", () => {
       .send({
         name: "Chiken",
         category: "",
+        cost: 34,
         tags: ["salad", "eggs"]
       });
 
@@ -255,6 +277,7 @@ describe("Update a Meal", () => {
       .set("x-auth-token", users[1].token)
       .send({
         name: "Beans",
+        cost: 34,
         category: "Rice"
       });
 
@@ -269,6 +292,7 @@ describe("Update a Meal", () => {
       .send({
         name: "Fried Rice",
         category: "Rice",
+        cost: 34,
         tags: []
       });
 
@@ -283,6 +307,7 @@ describe("Update a Meal", () => {
       .send({
         name: "Jollof Rice",
         category: "sause",
+        cost: 34,
         tags: ["salad", "corn", "egg"]
       });
 
@@ -296,6 +321,7 @@ describe("Update a Meal", () => {
       .send({
         name: "Jollof Rice",
         category: "sause",
+        cost: 12,
         tags: ["salad", "corn", "egg"]
       });
 
