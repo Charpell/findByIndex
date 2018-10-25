@@ -69,13 +69,7 @@ const posts = [
   {
     _id: postOneId,
     name: "John",
-    avatar: "avatar",
-    user: userOneId
-  },
-  {
-    _id: postOneId,
-    content: "",
-    name: "John",
+    content: "This is the first post",
     avatar: "avatar",
     user: userOneId
   },
