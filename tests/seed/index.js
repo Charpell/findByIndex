@@ -11,6 +11,7 @@ const mealTwoId = mongoose.Types.ObjectId();
 const mealThreeId = mongoose.Types.ObjectId();
 const postOneId = mongoose.Types.ObjectId();
 const postTwoId = mongoose.Types.ObjectId();
+const postThreeId = mongoose.Types.ObjectId();
 
 const users = [
   {
@@ -90,5 +91,6 @@ module.exports = {
   mealThreeId,
   userfourId,
   userOneId,
-  posts
+  posts,
+  postThreeId
 };

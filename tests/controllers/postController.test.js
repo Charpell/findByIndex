@@ -1,6 +1,6 @@
 const request = require("supertest");
 
-const { users, posts } = require("../seed");
+const { users, posts, postThreeId } = require("../seed");
 const { Post } = require("../../models/postModel");
 
 let app;
@@ -139,6 +139,50 @@ describe("Update a Post", () => {
       .send({
         content: "This is the second Post"
       });
+
+    expect(res.status).toBe(200);
+  });
+});
+
+describe("Delete a post", async () => {
+  beforeEach(async () => {
+    await Post.insertMany(posts);
+  });
+
+  it("should return 401 if user is not authenticated", async () => {
+    const res = await request(app).delete(`/api/posts/${posts[0]._id}`);
+
+    expect(res.status).toBe(401);
+  });
+
+  it("should return 400 if the post id is not valid", async () => {
+    const res = await request(app)
+      .delete(`/api/posts/123456`)
+      .set("x-auth-token", users[1].token);
+
+    expect(res.status).toBe(400);
+  });
+
+  it("should return 404 if the post is not found", async () => {
+    const res = await request(app)
+      .delete(`/api/posts/${postThreeId}`)
+      .set("x-auth-token", users[0].token);
+
+    expect(res.status).toBe(404);
+  });
+
+  it("should return 403 if the user is not the creator of the post", async () => {
+    const res = await request(app)
+      .delete(`/api/posts/${posts[0]._id}`)
+      .set("x-auth-token", users[2].token);
+
+    expect(res.status).toBe(403);
+  });
+
+  it("should return 200 if the the post was successfully deleted", async () => {
+    const res = await request(app)
+      .delete(`/api/posts/${posts[0]._id}`)
+      .set("x-auth-token", users[0].token);
 
     expect(res.status).toBe(200);
   });
