@@ -8,12 +8,14 @@ const {
   createPost,
   getPosts,
   getPost,
-  updatePost
+  updatePost,
+  deletePost
 } = require("../controllers/postController");
 
 router.post("/", authenticate, catchErrors(createPost));
 router.get("/", catchErrors(getPosts));
 router.get("/:id", catchErrors(getPost));
 router.patch("/:id", authenticate, catchErrors(updatePost));
+router.delete("/:id", authenticate, catchErrors(deletePost));
 
 module.exports = router;

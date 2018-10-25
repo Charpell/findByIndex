@@ -61,9 +61,27 @@ const updatePost = async (req, res) => {
   res.status(200).json(post);
 };
 
+const deletePost = async (req, res) => {
+  const isValid = mongoose.Types.ObjectId.isValid(req.params.id);
+  if (!isValid) return res.status(400).json({ error: "Invalid ID" });
+
+  let post = await Post.findById(req.params.id);
+  if (!post) return res.status(404).json({ response: "Not found" });
+
+  if (post.user.toString() !== req.user._id) {
+    return res
+      .status(403)
+      .json({ error: "You don't have permission to do that!" });
+  }
+
+  await post.remove();
+  res.status(200).json(post);
+};
+
 module.exports = {
   createPost,
   getPosts,
   getPost,
-  updatePost
+  updatePost,
+  deletePost
 };
