@@ -34,8 +34,36 @@ const getPost = async (req, res) => {
   res.status(200).json(post);
 };
 
+const updatePost = async (req, res) => {
+  const { error } = validateTextInput(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
+  const isValid = mongoose.Types.ObjectId.isValid(req.params.id);
+  if (!isValid) return res.status(400).json({ error: "Invalid ID" });
+
+  const { content } = req.body;
+
+  let post = await Post.findById(req.params.id);
+  if (!post) return res.status(404).json({ response: "Not found" });
+
+  if (post.user.toString() !== req.user._id) {
+    return res
+      .status(403)
+      .json({ error: "You don't have permission to do that!" });
+  }
+
+  await post
+    .set({
+      content
+    })
+    .save();
+
+  res.status(200).json(post);
+};
+
 module.exports = {
   createPost,
   getPosts,
-  getPost
+  getPost,
+  updatePost
 };
