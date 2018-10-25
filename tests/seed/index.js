@@ -9,6 +9,8 @@ const userfourId = mongoose.Types.ObjectId();
 const mealOneId = mongoose.Types.ObjectId();
 const mealTwoId = mongoose.Types.ObjectId();
 const mealThreeId = mongoose.Types.ObjectId();
+const postOneId = mongoose.Types.ObjectId();
+const postTwoId = mongoose.Types.ObjectId();
 
 const users = [
   {
@@ -63,6 +65,29 @@ const meals = [
   }
 ];
 
+const posts = [
+  {
+    _id: postOneId,
+    name: "John",
+    avatar: "avatar",
+    user: userOneId
+  },
+  {
+    _id: postOneId,
+    content: "",
+    name: "John",
+    avatar: "avatar",
+    user: userOneId
+  },
+  {
+    _id: postTwoId,
+    content: "This is the second post",
+    name: "Elina",
+    avatar: "avatar",
+    user: userTwoId
+  }
+];
+
 module.exports = {
   users,
   meals,
@@ -70,5 +95,6 @@ module.exports = {
   mealTwoId,
   mealThreeId,
   userfourId,
-  userOneId
+  userOneId,
+  posts
 };
