@@ -17,6 +17,25 @@ const createPost = async (req, res) => {
   res.status(201).json(result);
 };
 
+const getPosts = async (req, res) => {
+  const posts = await Post.find().sort({ date: -1 });
+
+  if (!posts) res.status(404).send({ response: "No Post found" });
+
+  res.status(200).json(posts);
+};
+
+const getPost = async (req, res) => {
+  const isValid = mongoose.Types.ObjectId.isValid(req.params.id);
+  if (!isValid) return res.status(400).json({ error: "Invalid ID" });
+
+  const post = await Post.findById(req.params.id);
+  if (!post) return res.status(404).json({ response: "Not found" });
+  res.status(200).json(post);
+};
+
 module.exports = {
-  createPost
+  createPost,
+  getPosts,
+  getPost
 };
