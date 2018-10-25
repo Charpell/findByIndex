@@ -85,3 +85,61 @@ describe("Get posts", () => {
     expect(res.status).toBe(200);
   });
 });
+
+describe("Update a Post", () => {
+  beforeEach(async () => {
+    await Post.insertMany(posts);
+  });
+
+  it("should return 401 if user is not authenticated", async () => {
+    const res = await request(app)
+      .patch(`/api/posts/${posts[0]._id}`)
+      .send({
+        content: "This is the second Post"
+      });
+
+    expect(res.status).toBe(401);
+  });
+
+  it("should return 400 for missing content field", async () => {
+    const res = await request(app)
+      .patch(`/api/posts/${posts[0]._id}`)
+      .set("x-auth-token", users[1].token)
+      .send();
+
+    expect(res.status).toBe(400);
+  });
+
+  it("should return 400 for empty content field", async () => {
+    const res = await request(app)
+      .patch(`/api/posts/${posts[0]._id}`)
+      .set("x-auth-token", users[1].token)
+      .send({
+        content: ""
+      });
+
+    expect(res.status).toBe(400);
+  });
+
+  it("should return 403 if the user is not the creator of the post", async () => {
+    const res = await request(app)
+      .patch(`/api/posts/${posts[0]._id}`)
+      .set("x-auth-token", users[1].token)
+      .send({
+        content: "This is the second Post"
+      });
+
+    expect(res.status).toBe(403);
+  });
+
+  it("should return 200 if the post is successfully updated", async () => {
+    const res = await request(app)
+      .patch(`/api/posts/${posts[0]._id}`)
+      .set("x-auth-token", users[0].token)
+      .send({
+        content: "This is the second Post"
+      });
+
+    expect(res.status).toBe(200);
+  });
+});
