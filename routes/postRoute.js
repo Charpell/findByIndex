@@ -11,7 +11,8 @@ const {
   updatePost,
   deletePost,
   likePost,
-  createComment
+  createComment,
+  updateComment
 } = require("../controllers/postController");
 
 router.post("/", authenticate, catchErrors(createPost));
@@ -23,5 +24,11 @@ router.delete("/:id", authenticate, catchErrors(deletePost));
 router.post("/like/:id", authenticate, catchErrors(likePost));
 
 router.post("/comment/:id", authenticate, catchErrors(createComment));
+
+router.patch(
+  "/comment/:id/:comment_id",
+  authenticate,
+  catchErrors(updateComment)
+);
 
 module.exports = router;
