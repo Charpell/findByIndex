@@ -178,12 +178,29 @@ describe("Delete a post", async () => {
 
     expect(res.status).toBe(403);
   });
+});
 
-  it("should return 200 if the the post was successfully deleted", async () => {
+describe("Like a Post", () => {
+  beforeEach(async () => {
+    await Post.insertMany(posts);
+  });
+
+  it("should return 401 if user is not authenticated", async () => {
+    const res = await request(app).post(`/api/posts/like/${posts[0]._id}`);
+    expect(res.status).toBe(401);
+  });
+
+  it("should return 400 for invalid id", async () => {
     const res = await request(app)
-      .delete(`/api/posts/${posts[0]._id}`)
-      .set("x-auth-token", users[0].token);
+      .post(`/api/posts/like/5656854`)
+      .set("x-auth-token", users[1].token);
+    expect(res.status).toBe(400);
+  });
 
-    expect(res.status).toBe(200);
+  it("should return 404 if the post does not exist", async () => {
+    const res = await request(app)
+      .post(`/api/posts/like/${postThreeId}`)
+      .set("x-auth-token", users[1].token);
+    expect(res.status).toBe(404);
   });
 });
