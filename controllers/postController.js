@@ -103,11 +103,35 @@ const likePost = async (req, res) => {
   res.status(200).json({ response: "Liked post" });
 };
 
+const createComment = async (req, res) => {
+  const isValid = mongoose.Types.ObjectId.isValid(req.params.id);
+  if (!isValid) return res.status(400).json({ error: "Invalid ID" });
+
+  const { error } = validateTextInput(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
+  let post = await Post.findById(req.params.id);
+  if (!post) return res.status(400).json({ response: "Not found" });
+
+  const newComment = {
+    content: req.body.content,
+    name: req.user.name,
+    avatar: req.user.avatar,
+    user: req.user._id
+  };
+
+  post.comments.unshift(newComment);
+  await post.save();
+
+  res.status(200).json(post);
+};
+
 module.exports = {
   createPost,
   getPosts,
   getPost,
   updatePost,
   deletePost,
-  likePost
+  likePost,
+  createComment
 };
