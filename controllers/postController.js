@@ -78,10 +78,36 @@ const deletePost = async (req, res) => {
   res.status(200).json(post);
 };
 
+const likePost = async (req, res) => {
+  const isValid = mongoose.Types.ObjectId.isValid(req.params.id);
+  if (!isValid) return res.status(400).json({ error: "Invalid ID" });
+
+  let post = await Post.findById(req.params.id);
+  if (!post) return res.status(404).json({ response: "Not found" });
+
+  if (
+    post.likes.filter(like => like.user.toString() === req.user._id).length > 0
+  ) {
+    const removeIndex = post.likes
+      .map(item => item.user.toString())
+      .indexOf(req.user._id);
+
+    post.likes.splice(removeIndex, 1);
+    await post.save();
+
+    return res.status(200).json({ response: "Unliked post" });
+  }
+
+  post.likes.unshift({ user: req.user._id });
+  await post.save();
+  res.status(200).json({ response: "Liked post" });
+};
+
 module.exports = {
   createPost,
   getPosts,
   getPost,
   updatePost,
-  deletePost
+  deletePost,
+  likePost
 };
