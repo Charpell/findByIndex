@@ -157,6 +157,34 @@ const updateComment = async (req, res) => {
   res.status(200).json(post);
 };
 
+const deleteComment = async (req, res) => {
+  const isValid = mongoose.Types.ObjectId.isValid(req.params.id);
+  if (!isValid) return res.status(400).json({ error: "Invalid ID" });
+
+  const isComment = mongoose.Types.ObjectId.isValid(req.params.comment_id);
+  if (!isComment) return res.status(400).json({ error: "Invalid ID" });
+
+  let post = await Post.findById(req.params.id);
+  if (!post) return res.status(404).json({ response: "Not found" });
+
+  if (
+    post.comments.filter(
+      comment => comment._id.toString() === req.params.comment_id
+    ).length === 0
+  ) {
+    return res.status(404).json({ response: "Comment does not exist" });
+  }
+
+  const removeIndex = post.comments
+    .map(item => item._id.toString())
+    .indexOf(req.params.comment_id);
+
+  post.comments.splice(removeIndex, 1);
+  await post.save();
+
+  return res.status(200).json(post);
+};
+
 module.exports = {
   createPost,
   getPosts,
@@ -165,5 +193,6 @@ module.exports = {
   deletePost,
   likePost,
   createComment,
-  updateComment
+  updateComment,
+  deleteComment
 };
