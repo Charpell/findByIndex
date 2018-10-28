@@ -25,8 +25,8 @@ const createMeal = async (req, res) => {
 const getMeals = async (req, res) => {
   const meals = await Meal.find()
     .sort("name")
-    .populate("vendor", "name role")
-    .select("name");
+    .populate("vendor", "id name role")
+    .select("name vendor");
   res.status(200).json(meals);
 };
 
