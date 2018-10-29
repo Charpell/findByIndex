@@ -7,6 +7,7 @@ const {
   validateUser,
   validateloginUser
 } = require("../models/userModel");
+const nodemailer = require("../helpers/nodemailer");
 
 const createUser = async (req, res) => {
   const { error } = validateUser(req.body);
@@ -30,6 +31,7 @@ const createUser = async (req, res) => {
 
   const token = user.generateAuthToken();
   res.header("x-auth-token", token).send(_.pick(user, ["id", "name", "email"]));
+  nodemailer(req.body.email);
 };
 
 const loginUser = async (req, res) => {
