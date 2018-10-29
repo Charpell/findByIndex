@@ -1,6 +1,9 @@
 const mongoose = require("mongoose");
 const _ = require("lodash");
 const bcrypt = require("bcrypt");
+const passport = require("passport");
+
+require("../config/passport")(passport);
 
 const {
   User,
@@ -43,6 +46,8 @@ const loginUser = async (req, res) => {
   res.header("x-auth-token", token).send(_.pick(user, ["id", "name", "email"]));
 };
 
+const google = passport.authenticate("google", { scope: ["profile", "email"] });
+
 const activateVendorMode = async (req, res) => {
   let user = await User.findOneAndUpdate(
     { _id: req.user._id },
@@ -61,5 +66,6 @@ const activateVendorMode = async (req, res) => {
 module.exports = {
   createUser,
   loginUser,
-  activateVendorMode
+  activateVendorMode,
+  google
 };
