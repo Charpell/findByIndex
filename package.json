@@ -26,6 +26,7 @@
     "bcrypt": "^3.0.1",
     "dotenv": "^6.0.0",
     "express": "^4.16.3",
+    "faker": "^4.1.0",
     "joi": "^13.1.0",
     "joi-objectid": "^2.0.0",
     "jsonwebtoken": "^8.1.1",
