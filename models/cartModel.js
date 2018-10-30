@@ -9,9 +9,10 @@ const cartSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Meal"
   },
-  isComplete: {
-    type: Boolean,
-    default: false
+  status: {
+    type: String,
+    default: "cart",
+    enum: ["cart", "pending", "progress", "complete", "cancel"]
   },
   createdAt: {
     type: Date,

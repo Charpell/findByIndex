@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
 const { Cart } = require("../models/cartModel");
+const nodemailer = require("../helpers/nodemailer");
 
 const createCart = async (req, res) => {
   const { _id: user } = req.user;
@@ -53,8 +54,45 @@ const removeCart = async (req, res) => {
   res.status(200).json(cart);
 };
 
+const bookMeal = async (req, res) => {
+  const isValid = mongoose.Types.ObjectId.isValid(req.params.id);
+  if (!isValid) return res.status(400).json({ error: "Invalid ID" });
+
+  let meal = await Cart.findOneAndUpdate(
+    { _id: req.params.id, user: req.user._id },
+    {
+      $set: {
+        status: "pending"
+      }
+    },
+    {
+      new: true
+    }
+  ).populate({
+    path: "meal",
+    select: "name cost vendor",
+    populate: {
+      path: "vendor",
+      select: "email"
+    }
+  });
+
+  if (!meal) return res.status(404).json({ response: "Not found" });
+
+  res.status(200).json({
+    message:
+      "You meal has been successfully booked. We have notified the vendor",
+    note:
+      "Your order is currently pending until the venor has accepted the request",
+    response: meal
+  });
+
+  nodemailer(meal.meal.vendor.email);
+};
+
 module.exports = {
   createCart,
   getCarts,
-  removeCart
+  removeCart,
+  bookMeal
 };
