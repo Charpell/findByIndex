@@ -18,6 +18,23 @@ const createCart = async (req, res) => {
   res.status(201).json(result);
 };
 
+const getCarts = async (req, res) => {
+  const cart = await Cart.find({ user: req.user._id })
+    .limit(10)
+    .sort("-createdAt")
+    .populate({
+      path: "meal",
+      select: "name category cost city vendor",
+      populate: {
+        path: "vendor",
+        select: "name email"
+      }
+    });
+
+  res.status(200).json(cart);
+};
+
 module.exports = {
-  createCart
+  createCart,
+  getCarts
 };
