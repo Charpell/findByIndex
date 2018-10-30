@@ -22,7 +22,7 @@ const mealSchema = new mongoose.Schema({
     required: true
   },
   tags: [String],
-  date: {
+  createdAt: {
     type: Date,
     default: Date.now
   },
@@ -33,8 +33,19 @@ const mealSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User"
   },
-  location: {
+  address: {
     type: String
+  },
+  city: {
+    type: String
+  },
+  views: {
+    type: Number,
+    default: 0
+  },
+  clicks: {
+    type: Number,
+    default: 0
   },
   ratings: [
     {
