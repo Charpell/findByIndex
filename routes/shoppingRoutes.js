@@ -6,13 +6,13 @@ const { catchErrors } = require("../helpers/errorhandlers");
 
 const {
   createCart,
-  getCarts,
+  getMealsInUserCart,
   removeCart,
   bookMeal
-} = require("../controllers/cartController");
+} = require("../controllers/shopUserController");
 
 router.post("/", authenticate, catchErrors(createCart));
-router.get("/", authenticate, catchErrors(getCarts));
+router.get("/", authenticate, catchErrors(getMealsInUserCart));
 router.delete("/:id", authenticate, catchErrors(removeCart));
 router.patch("/:id", authenticate, catchErrors(bookMeal));
 
