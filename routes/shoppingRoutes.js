@@ -11,7 +11,10 @@ const {
   bookMeal
 } = require("../controllers/shopUserController");
 
-const { getAllBookedMeals } = require("../controllers/shopVendorController");
+const {
+  getAllBookedMeals,
+  vendorAcceptsBooking
+} = require("../controllers/shopVendorController");
 
 router.post("/", authenticate, catchErrors(createCart));
 router.get("/", authenticate, catchErrors(getMealsInUserCart));
@@ -19,5 +22,6 @@ router.delete("/:id", authenticate, catchErrors(removeCart));
 router.patch("/:id", authenticate, catchErrors(bookMeal));
 
 router.get("/vendor", authenticate, catchErrors(getAllBookedMeals));
+router.patch("/vendor/:id", authenticate, catchErrors(vendorAcceptsBooking));
 
 module.exports = router;
