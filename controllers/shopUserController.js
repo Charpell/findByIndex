@@ -36,9 +36,11 @@ const createCart = async (req, res) => {
 };
 
 const getMealsInUserCart = async (req, res) => {
+  const { status = "cart" } = req.query;
+
   const mealItems = await Shopping.find({
     "customer._id": req.user._id,
-    status: "cart"
+    status
   })
     .limit(10)
     .sort("-createdAt");
