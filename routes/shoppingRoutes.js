@@ -15,7 +15,8 @@ const {
 const {
   getAllBookedMeals,
   vendorAcceptsBooking,
-  vendorCompletesBooking
+  vendorCompletesBooking,
+  vendorCancelsBooking
 } = require("../controllers/shopVendorController");
 
 router.post("/", authenticate, catchErrors(createCart));
@@ -38,6 +39,12 @@ router.patch(
   "/vendor/complete/:id",
   [authenticate, vendorAuthentication],
   catchErrors(vendorCompletesBooking)
+);
+
+router.patch(
+  "/vendor/cancel/:id",
+  [authenticate, vendorAuthentication],
+  catchErrors(vendorCancelsBooking)
 );
 
 module.exports = router;
