@@ -8,7 +8,8 @@ const {
   createCart,
   getMealsInUserCart,
   removeCart,
-  bookMeal
+  bookMeal,
+  cancelbookedMeal
 } = require("../controllers/shopUserController");
 
 const {
@@ -21,9 +22,18 @@ router.post("/", authenticate, catchErrors(createCart));
 router.get("/", authenticate, catchErrors(getMealsInUserCart));
 router.delete("/:id", authenticate, catchErrors(removeCart));
 router.patch("/:id", authenticate, catchErrors(bookMeal));
+router.patch("/cancel/:id", authenticate, catchErrors(cancelbookedMeal));
 
-router.get("/vendor", authenticate, catchErrors(getAllBookedMeals));
-router.patch("/vendor/:id", authenticate, catchErrors(vendorAcceptsBooking));
+router.get(
+  "/vendor",
+  [authenticate, vendorAuthentication],
+  catchErrors(getAllBookedMeals)
+);
+router.patch(
+  "/vendor/:id",
+  [authenticate, vendorAuthentication],
+  catchErrors(vendorAcceptsBooking)
+);
 router.patch(
   "/vendor/complete/:id",
   [authenticate, vendorAuthentication],
