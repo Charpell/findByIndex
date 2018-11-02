@@ -80,8 +80,38 @@ const vendorCompletesBooking = async (req, res) => {
   nodemailer(item.customer.email);
 };
 
+const vendorCancelsBooking = async (req, res) => {
+  const isValid = mongoose.Types.ObjectId.isValid(req.params.id);
+  if (!isValid) return res.status(400).json({ error: "Invalid ID" });
+
+  let item = await Shopping.findOneAndUpdate(
+    {
+      _id: req.params.id,
+      "vendor._id": req.user._id
+    },
+    {
+      $set: {
+        status: "cancel"
+      }
+    },
+    {
+      new: true
+    }
+  );
+
+  if (!item) return res.status(404).json({ response: "Not Found" });
+
+  res.status(200).json({
+    message: "You have cancelled the booked meal. We will notify the customer",
+    response: item
+  });
+
+  nodemailer(item.customer.email);
+};
+
 module.exports = {
   getAllBookedMeals,
   vendorAcceptsBooking,
-  vendorCompletesBooking
+  vendorCompletesBooking,
+  vendorCancelsBooking
 };
