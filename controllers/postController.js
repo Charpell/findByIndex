@@ -1,6 +1,5 @@
-const mongoose = require("mongoose");
-
 const { Post, validateTextInput } = require("../models/postModel");
+const { isValid } = require("../helpers");
 
 const createPost = async (req, res) => {
   const { error } = validateTextInput(req.body);
@@ -26,8 +25,8 @@ const getPosts = async (req, res) => {
 };
 
 const getPost = async (req, res) => {
-  const isValid = mongoose.Types.ObjectId.isValid(req.params.id);
-  if (!isValid) return res.status(400).json({ error: "Invalid ID" });
+  if (!isValid(req.params.id))
+    return res.status(400).json({ error: "Invalid ID" });
 
   const post = await Post.findById(req.params.id);
   if (!post) return res.status(404).json({ response: "Not found" });
@@ -38,8 +37,8 @@ const updatePost = async (req, res) => {
   const { error } = validateTextInput(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
-  const isValid = mongoose.Types.ObjectId.isValid(req.params.id);
-  if (!isValid) return res.status(400).json({ error: "Invalid ID" });
+  if (!isValid(req.params.id))
+    return res.status(400).json({ error: "Invalid ID" });
 
   const { content } = req.body;
 
@@ -62,8 +61,8 @@ const updatePost = async (req, res) => {
 };
 
 const deletePost = async (req, res) => {
-  const isValid = mongoose.Types.ObjectId.isValid(req.params.id);
-  if (!isValid) return res.status(400).json({ error: "Invalid ID" });
+  if (!isValid(req.params.id))
+    return res.status(400).json({ error: "Invalid ID" });
 
   let post = await Post.findById(req.params.id);
   if (!post) return res.status(404).json({ response: "Not found" });
@@ -79,8 +78,8 @@ const deletePost = async (req, res) => {
 };
 
 const likePost = async (req, res) => {
-  const isValid = mongoose.Types.ObjectId.isValid(req.params.id);
-  if (!isValid) return res.status(400).json({ error: "Invalid ID" });
+  if (!isValid(req.params.id))
+    return res.status(400).json({ error: "Invalid ID" });
 
   let post = await Post.findById(req.params.id);
   if (!post) return res.status(404).json({ response: "Not found" });
@@ -104,8 +103,8 @@ const likePost = async (req, res) => {
 };
 
 const createComment = async (req, res) => {
-  const isValid = mongoose.Types.ObjectId.isValid(req.params.id);
-  if (!isValid) return res.status(400).json({ error: "Invalid ID" });
+  if (!isValid(req.params.id))
+    return res.status(400).json({ error: "Invalid ID" });
 
   const { error } = validateTextInput(req.body);
   if (error) return res.status(400).send(error.details[0].message);
@@ -127,8 +126,8 @@ const createComment = async (req, res) => {
 };
 
 const updateComment = async (req, res) => {
-  const isValid = mongoose.Types.ObjectId.isValid(req.params.id);
-  if (!isValid) return res.status(400).json({ error: "Invalid ID" });
+  if (!isValid(req.params.id))
+    return res.status(400).json({ error: "Invalid ID" });
 
   const { error } = validateTextInput(req.body);
   if (error) return res.status(400).send(error.details[0].message);
@@ -158,11 +157,11 @@ const updateComment = async (req, res) => {
 };
 
 const deleteComment = async (req, res) => {
-  const isValid = mongoose.Types.ObjectId.isValid(req.params.id);
-  if (!isValid) return res.status(400).json({ error: "Invalid ID" });
+  if (!isValid(req.params.id))
+    return res.status(400).json({ error: "Invalid ID" });
 
-  const isComment = mongoose.Types.ObjectId.isValid(req.params.comment_id);
-  if (!isComment) return res.status(400).json({ error: "Invalid ID" });
+  if (!isValid(req.params.comment.id))
+    return res.status(400).json({ error: "Invalid ID" });
 
   let post = await Post.findById(req.params.id);
   if (!post) return res.status(404).json({ response: "Not found" });
