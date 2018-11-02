@@ -31,7 +31,9 @@ const createUser = async (req, res) => {
 
   const token = user.generateAuthToken();
   res.header("x-auth-token", token).send(_.pick(user, ["id", "name", "email"]));
-  nodemailer(req.body.email);
+
+  const newMessage = `Welcome to findByIndex ${name}`;
+  nodemailer(req.body.email, newMessage);
 };
 
 const loginUser = async (req, res) => {

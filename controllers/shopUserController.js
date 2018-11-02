@@ -80,6 +80,8 @@ const bookMeal = async (req, res) => {
 
   if (!item) return res.status(404).json({ response: "Not found" });
 
+  const vendorMessage = `${item.customer.name} has booked ${item.meal.name}`;
+
   res.status(200).json({
     message:
       "You meal has been successfully booked. We have notified the vendor",
@@ -88,7 +90,7 @@ const bookMeal = async (req, res) => {
     response: item
   });
 
-  nodemailer(item.vendor.email);
+  nodemailer(item.vendor.email, vendorMessage);
 };
 
 const cancelbookedMeal = async (req, res) => {
@@ -107,7 +109,11 @@ const cancelbookedMeal = async (req, res) => {
       note: "Awaiting response from the vendor",
       response: meal
     });
-    nodemailer(meal.vendor.email);
+
+    const vendorMessage = `${meal.customer.name} wants to cancel ${
+      meal.meal.name
+    } order`;
+    nodemailer(meal.vendor.email, vendorMessage);
     return;
   }
 
