@@ -48,7 +48,10 @@ const vendorAcceptsBooking = async (req, res) => {
     response: item
   });
 
-  nodemailer(item.customer.email);
+  const customerMessage = `We will notify the customer that you have accepted ${
+    item.meal.name
+  } order`;
+  nodemailer(item.customer.email, customerMessage);
 };
 
 const vendorCompletesBooking = async (req, res) => {
@@ -77,7 +80,10 @@ const vendorCompletesBooking = async (req, res) => {
     response: item
   });
 
-  nodemailer(item.customer.email);
+  const customerMessage = `We will notify the customer that you have completed ${
+    item.meal.name
+  } order`;
+  nodemailer(item.customer.email, customerMessage);
 };
 
 const vendorCancelsBooking = async (req, res) => {
@@ -106,7 +112,10 @@ const vendorCancelsBooking = async (req, res) => {
     response: item
   });
 
-  nodemailer(item.customer.email);
+  const customerMessage = `We will notify the customer that you have cancelled the ${
+    item.meal.name
+  } order`;
+  nodemailer(item.customer.email, customerMessage);
 };
 
 module.exports = {
