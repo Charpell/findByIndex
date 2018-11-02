@@ -13,7 +13,7 @@ const transporter = nodemailer.createTransport(
   })
 );
 
-module.exports = function(userEmail) {
+module.exports = function(userEmail, message) {
   const mailOptions = {
     from: '"findByIndex" <admin@findbyindex.com>',
     to: userEmail,
@@ -28,7 +28,7 @@ module.exports = function(userEmail) {
       </div>
       <div style="padding: 4%">
         <div class="row">
-          <p>Welcome to findByIndex</p>
+          <p>${message}</p>
         </div>
       </div>
     </div>
