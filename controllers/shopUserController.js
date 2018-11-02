@@ -1,15 +1,14 @@
-const mongoose = require("mongoose");
-
 const { Shopping } = require("../models/shoppingModel");
 const { Meal } = require("../models/mealModel");
 const nodemailer = require("../helpers/nodemailer");
+const { isValid } = require("../helpers");
 
 const createCart = async (req, res) => {
   const { _id, name, email } = req.user;
   const { meal } = req.body;
 
-  const isValid = mongoose.Types.ObjectId.isValid(meal);
-  if (!isValid) return res.status(400).json({ error: "Invalid ID" });
+  if (!isValid(req.params.id))
+    return res.status(400).json({ error: "Invalid ID" });
 
   const result = await Meal.findById(meal).populate("vendor", "name email");
 
@@ -49,8 +48,8 @@ const getMealsInUserCart = async (req, res) => {
 };
 
 const removeCart = async (req, res) => {
-  const isValid = mongoose.Types.ObjectId.isValid(req.params.id);
-  if (!isValid) return res.status(400).json({ error: "Invalid ID" });
+  if (!isValid(req.params.id))
+    return res.status(400).json({ error: "Invalid ID" });
 
   let item = await Shopping.findOneAndRemove({
     _id: req.params.id,
@@ -63,8 +62,8 @@ const removeCart = async (req, res) => {
 };
 
 const bookMeal = async (req, res) => {
-  const isValid = mongoose.Types.ObjectId.isValid(req.params.id);
-  if (!isValid) return res.status(400).json({ error: "Invalid ID" });
+  if (!isValid(req.params.id))
+    return res.status(400).json({ error: "Invalid ID" });
 
   let item = await Shopping.findOneAndUpdate(
     { _id: req.params.id, "customer._id": req.user._id },
@@ -94,8 +93,8 @@ const bookMeal = async (req, res) => {
 };
 
 const cancelbookedMeal = async (req, res) => {
-  const isValid = mongoose.Types.ObjectId.isValid(req.params.id);
-  if (!isValid) return res.status(400).json({ error: "Invalid ID" });
+  if (!isValid(req.params.id))
+    return res.status(400).json({ error: "Invalid ID" });
 
   let meal = await Shopping.findById(req.params.id);
 

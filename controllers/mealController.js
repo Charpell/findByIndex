@@ -1,7 +1,5 @@
-const mongoose = require("mongoose");
-const _ = require("lodash");
-
 const { Meal, validateMeal } = require("../models/mealModel");
+const { isValid } = require("../helpers");
 
 const createMeal = async (req, res) => {
   const { error } = validateMeal(req.body);
@@ -32,8 +30,8 @@ const getMeals = async (req, res) => {
 };
 
 const getMeal = async (req, res) => {
-  const isValid = mongoose.Types.ObjectId.isValid(req.params.id);
-  if (!isValid) return res.status(400).json({ error: "Invalid ID" });
+  if (!isValid(req.params.id))
+    return res.status(400).json({ error: "Invalid ID" });
 
   const meal = await Meal.findById(req.params.id);
   if (!meal) return res.status(404).json({ response: "Not found" });
@@ -44,8 +42,8 @@ const updateMeal = async (req, res) => {
   const { error } = validateMeal(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
-  const isValid = mongoose.Types.ObjectId.isValid(req.params.id);
-  if (!isValid) return res.status(400).json({ error: "Invalid ID" });
+  if (!isValid(req.params.id))
+    return res.status(400).json({ error: "Invalid ID" });
 
   const { name, category, tags } = req.body;
 
@@ -69,8 +67,8 @@ const updateMeal = async (req, res) => {
 };
 
 const deleteMeal = async (req, res) => {
-  const isValid = mongoose.Types.ObjectId.isValid(req.params.id);
-  if (!isValid) return res.status(400).json({ error: "Invalid ID" });
+  if (!isValid(req.params.id))
+    return res.status(400).json({ error: "Invalid ID" });
 
   let meal = await Meal.findById(req.params.id);
   if (!meal) return res.status(404).json({ response: "Not found" });
